@@ -13,8 +13,7 @@ env:
   ETISS_ARCH: RV32IMCXS4EMAC
   PROG: s4emac
   ABI: ilp32
-
-
+  
 jobs:
   setup-environment:
     runs-on: ubuntu-latest
@@ -23,8 +22,6 @@ jobs:
       with:
          ref: s4emac
          submodules: recursive
-         
-
          
     - name: Download Pre-built ETISS Artifact
       uses: actions/download-artifact@v4
