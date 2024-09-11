@@ -80,6 +80,7 @@ jobs:
       run: |
         sudo apt -qq install -y build-essential make clang g++ git cmake libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
         export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:$PATH 
+        export LD_LIBRARY_PATH=/home/runner/work/etiss_riscv_examples/etiss_prebuilt/lib:/home/runner/work/etiss_riscv_examples/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
         ls -al
         ls -al ..
