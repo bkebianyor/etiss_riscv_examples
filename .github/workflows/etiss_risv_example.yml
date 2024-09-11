@@ -6,7 +6,7 @@ on:
 
 env:
   BUILD_TYPE: Release
-  SEAL5_PREBUILT_DIR: ${{ github.workspace }}/../
+  SEAL5_PREBUILT_DIR: ${{ github.workspace }}/../seal5_built
   ETISS_PREBUILT_DIR: ${{ github.workspace }}/../etiss_prebuilt
   RISCV_GCC_PREFIX: ${{ github.workspace }}/../gnu
   RISCV_GCC_NAME: riscv32-unknown-elf
@@ -69,7 +69,9 @@ jobs:
     - if: ${{ steps.cache-gcc.outputs.cache-hit != 'true' }}       
       name: Download RISCV-GNU-Toolchain   
       run: |
-         cd $RISCV_GCC_PREFIX/../
+         pwd
+         ls -al
+         cd $RISCV_GCC_PREFIX/..
          wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/2023.09.27/Ubuntu/22.04/rv32imc_ilp32.tar.xz
          tar xvf rv32imc_ilp32.tar.xz
          rm rv32imc_ilp32.tar.xz
