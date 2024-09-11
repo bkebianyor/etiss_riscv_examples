@@ -96,5 +96,6 @@ jobs:
         echo "Finished"
         pwd
         chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
+        export LD_LIBRARY_PATH=/home/runner/work/etiss_riscv_examples/etiss_prebuilt/lib:/home/runner/work/etiss_riscv_examples/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
         ls -al install/ini/
         ../etiss_prebuilt/bin/bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
