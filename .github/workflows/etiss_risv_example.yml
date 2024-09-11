@@ -6,7 +6,7 @@ on:
 
 env:
   BUILD_TYPE: Release
-  SEAL5_PREBUILT_DIR: ${{ github.workspace }}/../seal5_built
+  SEAL5_PREBUILT_DIR: ${{ github.workspace }}/../seal5_prebuilt
   ETISS_PREBUILT_DIR: ${{ github.workspace }}/../etiss_prebuilt
   RISCV_GCC_PREFIX: ${{ github.workspace }}/../gnu
   RISCV_GCC_NAME: riscv32-unknown-elf
