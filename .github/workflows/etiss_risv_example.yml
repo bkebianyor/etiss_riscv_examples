@@ -6,8 +6,9 @@ on:
 
 env:
   BUILD_TYPE: Release
-  SEAL5_PREBUILT_DIR: ${{ github.workspace }}/seal5_prebuilt
-  RISCV_GCC_PREFIX: ${{ github.workspace }}/gnu
+  SEAL5_PREBUILT_DIR: ${{ github.workspace }}/../
+  ETISS_PREBUILT_DIR: ${{ github.workspace }}/../etiss_prebuilt
+  RISCV_GCC_PREFIX: ${{ github.workspace }}/../gnu
   RISCV_GCC_NAME: riscv32-unknown-elf
   ARCH: rv32imc_xs4emac
   ETISS_ARCH: RV32IMCXS4EMAC
@@ -28,7 +29,7 @@ jobs:
       with:
         name: etiss_prebuilt
         github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-        path: etiss_prebuilt
+        path: $ETISS_PREBUILT_DIR
         repository: bkebianyor/etiss_wysiwyng
         run-id: 10806737972
 
@@ -38,7 +39,7 @@ jobs:
       env:
         cache-name: cache-seal5-binaries
       with:
-        path: ./seal5_prebuilt
+        path: $SEAL5_PREBUILT_DIR
         key: seal5-binaries-${{ steps.date.outputs.date }}
         restore-keys: |
           seal5-binaries-
@@ -51,7 +52,7 @@ jobs:
         name: demo-install
         github-token: ${{ secrets.REPO_ACCESS_TOKEN }}   
         repository: bkebianyor/seal5
-        path: seal5_prebuilt
+        path: $SEAL5_PREBUILT_DIR
         run-id: 10631506372
         
     - name: Download Cached GCC Binaries
@@ -60,7 +61,7 @@ jobs:
       env:
         cache-name: cache-gcc-binaries
       with:
-        path: ./gnu
+        path: $RISCV_GCC_PREFIX
         key: gcc-binaries-${{ steps.date.outputs.date }}
         restore-keys: |
           gcc-binaries-
@@ -68,6 +69,7 @@ jobs:
     - if: ${{ steps.cache-gcc.outputs.cache-hit != 'true' }}       
       name: Download RISCV-GNU-Toolchain   
       run: |
+         cd $RISCV_GCC_PREFIX/../
          wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/2023.09.27/Ubuntu/22.04/rv32imc_ilp32.tar.xz
          tar xvf rv32imc_ilp32.tar.xz
          rm rv32imc_ilp32.tar.xz
@@ -79,7 +81,9 @@ jobs:
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
         ls -al
         ls -al ..
-        cd etiss_riscv_examples
+        pwd
+        cd ${{ github.workspace }}
+        pwd
         mkdir build && cd build
         cmake -DCMAKE_TOOLCHAIN_FILE=rv32gc-llvm-toolchain.cmake -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DCMAKE_INSTALL_PREFIX=../install -DRISCV_ARCH=$ARCH -DRISCV_ABI=$ABI -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DRISCV_TOOLCHAIN_BASENAME=$RISCV_GCC_NAME ..
         make -j$(nproc) install    
