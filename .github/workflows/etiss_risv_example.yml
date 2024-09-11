@@ -94,6 +94,6 @@ jobs:
       run: |
         echo "Finished"
         pwd
-        chmod +x etiss_prebuilt/bin/bare_etiss_processor
-        ls -al etiss_riscv_examples/install/ini/
-        ./etiss_prebuilt/bin/bare_etiss_processor -ietiss_riscv_examples/install/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
+        chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
+        ls -al install/ini/
+        ./$ETISS_PREBUILT_DIR/bin/bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
