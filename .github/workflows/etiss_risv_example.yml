@@ -29,7 +29,7 @@ jobs:
       with:
         name: etiss_prebuilt
         github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-        path: $ETISS_PREBUILT_DIR
+        path: ../etiss_prebuilt
         repository: bkebianyor/etiss_wysiwyng
         run-id: 10806737972
 
@@ -39,7 +39,7 @@ jobs:
       env:
         cache-name: cache-seal5-binaries
       with:
-        path: $SEAL5_PREBUILT_DIR
+        path: ../seal5_prebuilt
         key: seal5-binaries-${{ steps.date.outputs.date }}
         restore-keys: |
           seal5-binaries-
@@ -52,7 +52,7 @@ jobs:
         name: demo-install
         github-token: ${{ secrets.REPO_ACCESS_TOKEN }}   
         repository: bkebianyor/seal5
-        path: $SEAL5_PREBUILT_DIR
+        path: ../seal5_prebuilt
         run-id: 10631506372
         
     - name: Download Cached GCC Binaries
@@ -61,7 +61,7 @@ jobs:
       env:
         cache-name: cache-gcc-binaries
       with:
-        path: $RISCV_GCC_PREFIX
+        path: ../gnu
         key: gcc-binaries-${{ steps.date.outputs.date }}
         restore-keys: |
           gcc-binaries-
@@ -71,7 +71,7 @@ jobs:
       run: |
          pwd
          ls -al
-         cd $RISCV_GCC_PREFIX/..
+         cd ..
          wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/2023.09.27/Ubuntu/22.04/rv32imc_ilp32.tar.xz
          tar xvf rv32imc_ilp32.tar.xz
          rm rv32imc_ilp32.tar.xz
