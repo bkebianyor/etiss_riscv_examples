@@ -44,7 +44,7 @@ jobs:
           seal5-binaries-
         
 
-    - if: ${{ steps.cache-seal5.outputs.cache-hit != 'true' } && { github.event_name == 'repository_dispatch' }} 
+    - if: ${{ steps.cache-seal5.outputs.cache-hit != 'true'  &&  github.event_name == 'repository_dispatch' }} 
       name: Download Seal5 Pre-built
       uses: actions/download-artifact@v4
       with:
