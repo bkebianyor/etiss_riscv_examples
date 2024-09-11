@@ -96,4 +96,4 @@ jobs:
         pwd
         chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
         ls -al install/ini/
-        ./$ETISS_PREBUILT_DIR/bin/bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
+        ../etiss_prebuilt/bin/bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
