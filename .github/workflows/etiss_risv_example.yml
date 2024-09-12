@@ -6,8 +6,8 @@ on:
 
 env:
   BUILD_TYPE: Release
-  SEAL5_PREBUILT_DIR: ${{ github.workspace }}/../seal5_prebuilt
-  ETISS_PREBUILT_DIR: ${{ github.workspace }}/../etiss_prebuilt
+  SEAL5_PREBUILT_DIR: /home/runner/work/seal5_prebuilt
+  ETISS_PREBUILT_DIR: /home/runner/work/etiss_prebuilt
   RISCV_GCC_PREFIX: ${{ github.workspace }}/../gnu
   RISCV_GCC_NAME: riscv32-unknown-elf
   ARCH: rv32imc_xs4emac
@@ -29,9 +29,9 @@ jobs:
       with:
         name: etiss_prebuilt
         github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-        path: ../etiss_prebuilt
+        path: /home/runner/work/etiss_prebuilt
         repository: bkebianyor/etiss_wysiwyng
-        run-id: 10827542306
+        run-id: 10828496235
 
     - name: Download Cached Seal5 Binaries
       id: cache-seal5
@@ -39,7 +39,7 @@ jobs:
       env:
         cache-name: cache-seal5-binaries
       with:
-        path: ../seal5_prebuilt
+        path: /home/runner/work/seal5_prebuilt
         key: seal5-binaries-${{ steps.date.outputs.date }}
         restore-keys: |
           seal5-binaries-
@@ -52,7 +52,7 @@ jobs:
         name: demo-install
         github-token: ${{ secrets.REPO_ACCESS_TOKEN }}   
         repository: bkebianyor/seal5
-        path: ../seal5_prebuilt
+        path: /home/runner/work/seal5_prebuilt
         run-id: 10631506372
         
     - name: Download Cached GCC Binaries
@@ -79,8 +79,8 @@ jobs:
     - name: Build ETISS RISCV Examples for Testing
       run: |
         sudo apt -qq install -y build-essential make clang g++ git cmake libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
-        export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:$PATH 
-        export LD_LIBRARY_PATH=/home/runner/work/etiss_riscv_examples/etiss_prebuilt/lib:/home/runner/work/etiss_riscv_examples/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
+        export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
+        export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
         ls -al
         ls -al ..
@@ -96,6 +96,6 @@ jobs:
         echo "Finished"
         pwd
         chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
-        export LD_LIBRARY_PATH=/home/runner/work/etiss_riscv_examples/etiss_prebuilt/lib:/home/runner/work/etiss_riscv_examples/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
+        export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
         ls -al install/ini/
-        ../etiss_prebuilt/bin/bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
+        ./etiss_prebuilt/bin/bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
