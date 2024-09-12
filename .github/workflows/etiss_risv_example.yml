@@ -31,7 +31,7 @@ jobs:
         github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
         path: /home/runner/work/etiss_prebuilt
         repository: bkebianyor/etiss_wysiwyng
-        run-id: 10828496235
+        run-id: 10829730285
 
     - name: Download Cached Seal5 Binaries
       id: cache-seal5
@@ -98,4 +98,5 @@ jobs:
         chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
         export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
         ls -al install/ini/
-        ./etiss_prebuilt/bin/bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
+        export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
+        bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
