@@ -8,7 +8,7 @@ env:
   BUILD_TYPE: Release
   SEAL5_PREBUILT_DIR: /home/runner/work/seal5_prebuilt
   ETISS_PREBUILT_DIR: /home/runner/work/etiss_prebuilt
-  RISCV_GCC_PREFIX: ${{ github.workspace }}/../gnu
+  RISCV_GCC_PREFIX:  /home/runner/work/gnu
   RISCV_GCC_NAME: riscv32-unknown-elf
   ARCH: rv32imc_xs4emac
   ETISS_ARCH: RV32IMCXS4EMAC
@@ -51,7 +51,7 @@ jobs:
       env:
         cache-name: cache-gcc-binaries
       with:
-        path: ../gnu
+        path:  /home/runner/work/gnu
         key: gcc-binaries-${{ steps.date.outputs.date }}
         restore-keys: |
           gcc-binaries-
@@ -68,13 +68,9 @@ jobs:
       run: |
         sudo apt -qq install -y build-essential make clang g++ git cmake libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
         export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
-        export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
+        #export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
-        ls -al
-        ls -al ..
-        pwd
         cd ${{ github.workspace }}
-        pwd
         mkdir build && cd build
         cmake -DCMAKE_TOOLCHAIN_FILE=rv32gc-llvm-toolchain.cmake -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DCMAKE_INSTALL_PREFIX=../install -DRISCV_ARCH=$ARCH -DRISCV_ABI=$ABI -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DRISCV_TOOLCHAIN_BASENAME=$RISCV_GCC_NAME ..
         make -j$(nproc) install    
@@ -110,11 +106,8 @@ jobs:
         
       - name: Run ETISS Default Configuration Test
         run: |
-          echo "Finished"
-          pwd
           sudo apt -qq install -y build-essential make clang g++ git cmake libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
           chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
           export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
-          ls -al install/ini/
           export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
           bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
