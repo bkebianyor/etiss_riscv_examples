@@ -16,7 +16,7 @@ env:
   ABI: ilp32
   
 jobs:
-  setup-environment:
+  compile-examples:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -24,15 +24,6 @@ jobs:
          ref: s4emac
          submodules: recursive
          
-    - name: Download Pre-built ETISS Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: etiss_prebuilt
-        github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-        path: /home/runner/work/etiss_prebuilt
-        repository: bkebianyor/etiss_wysiwyng
-        run-id: 10829730285
-
     - name: Download Cached Seal5 Binaries
       id: cache-seal5
       uses: actions/cache@v4
@@ -42,8 +33,7 @@ jobs:
         path: /home/runner/work/seal5_prebuilt
         key: seal5-binaries-${{ steps.date.outputs.date }}
         restore-keys: |
-          seal5-binaries-
-        
+          seal5-binaries-   
 
     - if: ${{ steps.cache-seal5.outputs.cache-hit != 'true'  &&  github.event_name == 'repository_dispatch' }} 
       name: Download Seal5 Pre-built
@@ -69,13 +59,11 @@ jobs:
     - if: ${{ steps.cache-gcc.outputs.cache-hit != 'true' }}       
       name: Download RISCV-GNU-Toolchain   
       run: |
-         pwd
-         ls -al
          cd ..
          wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/2023.09.27/Ubuntu/22.04/rv32imc_ilp32.tar.xz
          tar xvf rv32imc_ilp32.tar.xz
          rm rv32imc_ilp32.tar.xz
-    
+
     - name: Build ETISS RISCV Examples for Testing
       run: |
         sudo apt -qq install -y build-essential make clang g++ git cmake libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
@@ -91,12 +79,27 @@ jobs:
         cmake -DCMAKE_TOOLCHAIN_FILE=rv32gc-llvm-toolchain.cmake -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DCMAKE_INSTALL_PREFIX=../install -DRISCV_ARCH=$ARCH -DRISCV_ABI=$ABI -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DRISCV_TOOLCHAIN_BASENAME=$RISCV_GCC_NAME ..
         make -j$(nproc) install    
         make install
-    - name: Run ETISS Default Configuration Test
-      run: |
-        echo "Finished"
-        pwd
-        chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
-        export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
-        ls -al install/ini/
-        export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
-        bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
+
+             
+  run-examples:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Pre-built ETISS Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: etiss_prebuilt
+          github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          path: /home/runner/work/etiss_prebuilt
+          repository: bkebianyor/etiss_wysiwyng
+          #get run-id from payload of seal5-event 
+          run-id: 10829730285   
+        
+      - name: Run ETISS Default Configuration Test
+        run: |
+          echo "Finished"
+          pwd
+          chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
+          export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
+          ls -al install/ini/
+          export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
+          bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
