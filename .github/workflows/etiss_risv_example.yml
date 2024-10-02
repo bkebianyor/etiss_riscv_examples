@@ -43,8 +43,7 @@ jobs:
         github-token: ${{ secrets.REPO_ACCESS_TOKEN }}   
         repository: bkebianyor/seal5
         path: /home/runner/work/seal5_prebuilt
-        run-id: 11140724651
-        #${{ github.event.client_payload.triggered_run_id }}
+        run-id: ${{ github.event.client_payload.triggered_run_id }}
     
     - name: Download Cached GCC Binaries
       id: cache-gcc
