@@ -70,6 +70,7 @@ jobs:
         sudo apt -qq install -y build-essential make clang g++ git cmake libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
         export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
         #export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
+        ls -al $SEAL5_PREBUILT_DIR
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
         cd ${{ github.workspace }}
         mkdir build && cd build
