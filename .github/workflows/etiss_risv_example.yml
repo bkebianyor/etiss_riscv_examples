@@ -43,7 +43,8 @@ jobs:
         github-token: ${{ secrets.REPO_ACCESS_TOKEN }}   
         repository: bkebianyor/seal5
         path: /home/runner/work/seal5_prebuilt
-        run-id: ${{ github.event.client_payload.triggered_run_id }}
+        run-id: 11177255212 
+        #${{ github.event.client_payload.triggered_run_id }}
     
     - name: Download Cached GCC Binaries
       id: cache-gcc
@@ -95,7 +96,8 @@ jobs:
           path: /home/runner/work/etiss_prebuilt
           repository: bkebianyor/etiss_wysiwyng
           #get run-id from client_payload of seal5-event 
-          run-id: ${{ github.event.client_payload.etiss_run_id }}
+          run-id: 11177255253
+          #${{ github.event.client_payload.etiss_run_id }}
 
       - name: Download ETISS RISCV Examples Artifact
         uses: actions/download-artifact@v4
