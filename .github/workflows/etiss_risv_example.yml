@@ -72,6 +72,9 @@ jobs:
         ls -al $SEAL5_PREBUILT_DIR/bin
         echo $PATH
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
+        ln -s $SEAL5_PREBUILT_DIR/bin/clang-18 $SEAL5_PREBUILT_DIR/bin/clang
+        ln -s $SEAL5_PREBUILT_DIR/bin/clang-18 $SEAL5_PREBUILT_DIR/bin/clang++
+
         cd ${{ github.workspace }}
         mkdir build && cd build
         cmake -DCMAKE_TOOLCHAIN_FILE=rv32gc-llvm-toolchain.cmake -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DCMAKE_INSTALL_PREFIX=../install -DRISCV_ARCH=$ARCH -DRISCV_ABI=$ABI -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DRISCV_TOOLCHAIN_BASENAME=$RISCV_GCC_NAME ..
