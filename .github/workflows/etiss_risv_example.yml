@@ -99,12 +99,12 @@ jobs:
           #get run-id from client_payload of seal5-event 
           run-id: ${{ github.event.client_payload.etiss_run_id }}
 
-      - name: Download ETISS RISCV Examples Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: etiss-riscv-examples-prebuilt
-          github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          path: install
+     # - name: Download ETISS RISCV Examples Artifact
+      #  uses: actions/download-artifact@v4
+     #   with:
+      #    name: etiss-riscv-examples-prebuilt
+       #   github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        #  path: install
         
       - name: Run ETISS Default Configuration Test
         run: |
@@ -112,4 +112,4 @@ jobs:
           chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
           export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
           export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
-          bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
+         # bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
