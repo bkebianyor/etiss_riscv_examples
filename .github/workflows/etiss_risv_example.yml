@@ -71,7 +71,8 @@ jobs:
         export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
         export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
                                       
-                  
+        ln -s $SEAL5_PREBUILT_DIR/bin/clang-18 $SEAL5_PREBUILT_DIR/bin/clang
+        ln -s $SEAL5_PREBUILT_DIR/bin/clang-18 $SEAL5_PREBUILT_DIR/bin/clang++          
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
         ls -al
         ls -al ..
