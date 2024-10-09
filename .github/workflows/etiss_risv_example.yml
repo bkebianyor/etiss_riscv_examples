@@ -6,9 +6,9 @@ on:
 
 env:
   BUILD_TYPE: Release
-  SEAL5_PREBUILT_DIR: /home/runner/work/seal5_prebuilt/release
+  SEAL5_PREBUILT_DIR: /home/runner/work/seal5_prebuilt
   ETISS_PREBUILT_DIR: /home/runner/work/etiss_prebuilt
-  RISCV_GCC_PREFIX:  /home/runner/work/gnu
+  RISCV_GCC_PREFIX: ${{ github.workspace }}/../gnu
   RISCV_GCC_NAME: riscv32-unknown-elf
   ARCH: rv32imc_xs4emac
   ETISS_ARCH: RV32IMCXS4EMAC
@@ -44,14 +44,15 @@ jobs:
         repository: bkebianyor/seal5
         path: /home/runner/work/seal5_prebuilt
         run-id: ${{ github.event.client_payload.triggered_run_id }}
-    
+
+        
     - name: Download Cached GCC Binaries
       id: cache-gcc
       uses: actions/cache@v4
       env:
         cache-name: cache-gcc-binaries
       with:
-        path:  /home/runner/work/gnu
+        path: ../gnu
         key: gcc-binaries-${{ steps.date.outputs.date }}
         restore-keys: |
           gcc-binaries-
@@ -69,12 +70,14 @@ jobs:
         sudo apt -qq install -y build-essential make clang g++ git cmake libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
         export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
         export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
-        ls -al $SEAL5_PREBUILT_DIR/bin
-        echo $PATH
+                                      
+                  
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
-        ln -s $SEAL5_PREBUILT_DIR/bin/clang-18 $SEAL5_PREBUILT_DIR/bin/clang
-        ln -s $SEAL5_PREBUILT_DIR/bin/clang-18 $SEAL5_PREBUILT_DIR/bin/clang++
+        ls -al
+        ls -al ..
+        pwd
         cd ${{ github.workspace }}
+        pwd
         mkdir build && cd build
         cmake -DCMAKE_TOOLCHAIN_FILE=rv32gc-llvm-toolchain.cmake -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DCMAKE_INSTALL_PREFIX=../install -DRISCV_ARCH=$ARCH -DRISCV_ABI=$ABI -DRISCV_TOOLCHAIN_PREFIX=$RISCV_GCC_PREFIX -DRISCV_TOOLCHAIN_BASENAME=$RISCV_GCC_NAME ..
         make -j$(nproc) install    
@@ -98,7 +101,7 @@ jobs:
           github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
           path: /home/runner/work/etiss_prebuilt
           repository: bkebianyor/etiss_wysiwyng
-          #get run-id from client_payload of seal5-event 
+          #get run-id from payload of seal5-event 
           run-id: ${{ github.event.client_payload.etiss_run_id }}
 
       - name: Download ETISS RISCV Examples Artifact
@@ -110,8 +113,11 @@ jobs:
         
       - name: Run ETISS Default Configuration Test
         run: |
+          echo "Finished"
+          pwd
           sudo apt -qq install -y build-essential make clang g++ git cmake libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
           chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
           export LD_LIBRARY_PATH=/home/runner/work/etiss_prebuilt/lib:/home/runner/work/etiss_prebuilt/lib/plugins:$LD_LIBRRARY_PATH
+          ls -al install/ini/
           export PATH=$RISCV_GCC_PREFIX/bin/:$SEAL5_PREBUILT_DIR/bin/:/home/runner/work/etiss_prebuilt/bin:$PATH 
           bare_etiss_processor -iinstall/ini/s4emac.ini --arch.cpu=$ETISS_ARCH
